@@ -17,15 +17,27 @@ export default NextAuth({
       const { email } = user
 
       try {
-        await fauna.query(  // Usando o Fauna, criamos uma query
-          // A query criada, acessa as Collections users, e salva o email no campo data
-          q.Create(q.Collection('users'), { data: { email } })
+        await fauna.query(  // Usando o Fauna, criamos queries através do método query(q)
+
+          // Query: Se não existe o email no BD que "bate"(Match) com o enviado pelo Github 
+          q.If(q.Not(q.Exists
+            (q.Match(q.Index('users_by_email'), // Index: "funções" prontas do BD para retornar dados
+              q.Casefold(user.email)  // Query: ignorar o Case(maiusc. e minusc.) do email
+            ))),
+
+            // Query: Acessa as Collections(table) users, e salva o email no campo data
+            q.Create(q.Collection('users'), { data: { email } }),
+
+            // Query: Senão, busca o email que "bate"(Match) com o enviado pelo Github
+            q.Get(q.Match(
+              q.Index('users_by_email'), q.Casefold(user.email)
+            ))
+          )
         )
         return true
 
       } catch (error) {
         console.log(error)
-
         return false
       }
     }
