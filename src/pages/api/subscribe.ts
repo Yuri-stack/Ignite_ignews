@@ -1,27 +1,64 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
+import { fauna } from "../../services/fauna";
+import { query as q } from "faunadb";
 import { stripe } from "../../services/stripe";
 
+type User = {
+    ref: {
+        id: string
+    }
+    data: {
+        stripe_customer_id: string
+    }
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if(req.method === 'POST') {
+    if (req.method === 'POST') {
 
         // Pegando as info da Sessão
         const session = await getSession({ req })
-        
-        // Criando um usuário/customer para o Stripe a partir do Usuário logado
-        const stripeCustomer = await stripe.customers.create({
-            email: session.user.email,
-            // metadata
-        })
+
+        const user = await fauna.query<User>(
+            q.Get(
+                q.Match(q.Index('users_by_email'),
+                    q.Casefold(session.user.email)
+                )
+            )
+        )
+
+        let customerId = user.data.stripe_customer_id
+
+        if (!customerId) {
+
+            // Criando um usuário/customer para o Stripe a partir do Usuário logado
+            const stripeCustomer = await stripe.customers.create({
+                email: session.user.email,
+                // metadata
+            })
+
+            await fauna.query(
+                q.Update(
+                    q.Ref(q.Collection('users'), user.ref.id),
+                    {
+                        data: {
+                            stripe_customer_id: stripeCustomer.id
+                        }
+                    }
+                )
+            )
+    
+            customerId = stripeCustomer.id
+        }
 
         // Criando uma Checkout Session do Stripe
         const stripeCheckoutSession = await stripe.checkout.sessions.create({
-            customer: stripeCustomer.id,    // usuário cadastrado no Stripe
+            customer: customerId,    // usuário cadastrado no Stripe
             payment_method_types: ['card'],
             billing_address_collection: 'required',
             line_items: [
-                { price: 'price_1JkcbaFzugJ4FwnFngkPiDJ7', quantity: 1}
+                { price: 'price_1JkcbaFzugJ4FwnFngkPiDJ7', quantity: 1 }
             ],
             mode: 'subscription',
             allow_promotion_codes: true,
@@ -31,7 +68,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         return res.status(200).json({ sessionId: stripeCheckoutSession.id })
 
-    }else{
+    } else {
         res.setHeader('Allow', 'POST')
         res.status(405).end('Method not allowed')
     }
