@@ -3,6 +3,7 @@ import { Readable } from "stream";
 import Stripe from "stripe";
 
 import { stripe } from "../../services/stripe";
+import { saveSubscription } from "./_lib/managerSubscription";
 
 // Função para pegar todas as info retornadas pouco a pouco, e transformar em um Objeto Buffer 
 async function buffer(readable: Readable){
@@ -40,17 +41,37 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         let event: Stripe.Event
 
         try{
-            // Verificando se os parametros batem, e construindo o Objeto de evento
+            // Verificando se os parametros (buf e secret) batem, e construindo o Objeto de evento
             event = stripe.webhooks.constructEvent(buf, secret, process.env.STRIPE_WEBHOOK_SECRET)           
         } catch (err) {
+            console.log(process.env.STRIPE_WEBHOOK_SECRET)
+            console.log(err)
             return res.status(400).send(`Webhook error: ${err.message}`)
         }
 
         // Pegando o tipo do event retornado pela Aplicação do Stripe ao validar uma compra
         const { type } = event
 
+        // Verificando os eventos e adotando ações para cada um deles
         if(relevantEvents.has(type)){
-            console.log("Evento Recebido", event)
+            try {
+                switch(type){
+                    case 'checkout.session.completed':
+                        // Tipamos o evento para saber os dados dentro dela
+                        const checkoutSession = event.data.object as Stripe.Checkout.Session
+
+                        await saveSubscription(
+                            checkoutSession.subscription.toString(),
+                            checkoutSession.customer.toString()
+                        )
+
+                        break
+                    default:
+                        throw new Error("Unhandled event");
+                }
+            } catch (error) {
+                return res.json({ error: 'Webhook handle failed' })
+            }
         }
 
         res.json({ ok: true })
