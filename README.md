@@ -1,41 +1,149 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+	<img src="public/images/logo.svg"  alt="Logo" width="240"><br><br>
+   Ig.News
+</h1>
 
-## Getting Started
+<div>
+    <p align="center">
+    <a href="https://www.linkedin.com/in/yuri-silva99/" target="_blank">
+        <img src="https://img.shields.io/static/v1?label=Author&message=Yuri&color=00ba6d&style=for-the-badge&logo=LinkedIn" alt="Author: Yuri">
+    </a>
+    <a>
+    <img src="https://img.shields.io/static/v1?label=Language&message=React&color=aquamarine&style=for-the-badge&logo=React" alt="Language: React">
+</a>
+    <a>
+        <img src="https://img.shields.io/static/v1?label=Language&message=Typescript&color=blue&style=for-the-badge&logo=Typescript" alt="Language: Typescript">
+    </a>
+  <br>
+    <a>
+        <img src="https://img.shields.io/static/v1?label=Language&message=SASS&color=ff69b4&style=for-the-badge&logo=SASS" alt="Language: SASS">
+    </a>
+      <a>
+    <img src="https://img.shields.io/static/v1?label=Database&message=FaunaDB&color=blueviolet&style=for-the-badge&logo=database" alt="Database: FaunaDB">
+</a>
+<a>
+    <img src="https://img.shields.io/static/v1?label=CMS&message=Prismic&color=blue&style=for-the-badge&logo=Prismic" alt="CMS: Prismic">
+</a>
+<a>
+    <img src="https://img.shields.io/static/v1?label=Build&message=NextJs&color=black&style=for-the-badge&logo=nextdotjs" alt="NextJs: NextJs">
+</a>
+    </p>
+</div>
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
+<p align="center">
+ <a href="#about">About</a> •
+ <a href="#features">Features</a> •
+ <a href="#revised-concepts">Revised Concepts</a> • 
+ <a href="#installation">Installation</a> • 
+ <a href="#getting-started">Get Started</a> • 
+ <a href="#technologies">Technologies</a> • 
+ <a href="#license">License</a>
+</p>
+
+## 📌About
+
+<div>
+    <p align="center">
+    <em>
+    Building a Newsletter Subscription Platform on ReactJs content
+    </em>
+    </p>
+</div>
+
+## 🚀Features
+
+- Connecting to Github via OAuth
+- Signature System with Stripe
+- Information control with the Fauna Database
+- Post Preview Screen
+
+## 👓Revised Concepts
+
+- Control of Logged Users and Subscribers
+- Concept of SSG and SSR with Next
+- Next Auth
+- Dynamic routes
+- Webhooks
+- Use of APIs to control Authentication and Enrollment
+- Front-End JAMStack and connection to CMS Prismic
+
+## 📕Installation
+
+**You must have already installed**
+- [Node.js](https://nodejs.org/en/)
+- [Npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
+
+**Recommendations**
+-   It is recommended that you have installed Google Chrome or Edge
+-   I recommend using VSCode as development IDE
+-   You will need to have an account on the following platforms to access the required environment variables:
+	- Stripe
+	- FaunaDB
+	- Github
+	- Prismic CMS
+
+**Let's divide it into 3 steps.**
+1. Clone this repository
+2. Install dependencies
+3. Setting Environment Variables
+4. Installing the Stripe CLI / Executable
+  ---
+### 1. Clone this repository
+```
+git clone https://github.com/Yuri-stack/Ignite_ignews.git
+```
+---
+### 2. Install the dependencies
+```
+npm install
+```
+or
+```
+yarn
+```
+
+*Make sure your internet is stable, as this may take a while* 
+
+### 3. Setting Environment Variables
+
+In the ``env.local`` file, change its name to ``.env.local``. Once this is done, place the respective personal keys for each platform. If in doubt, please read the documentation for each platform.
+
+### 4. Installing the Stripe CLI / Executable
+
+To test the webhooks Stripe you need access the Stripe documentation, and look for the CLI option. Once that's done, you can be installing the CLI or downloading the Executable. 
+
+- In the case of the first option, follow the Stripe Tool documentation. 
+
+- In the case of the second option, download the .exe, create a folder in the root of the project called ``stripe-cli``, and place the .exe there so that the ``stripe`` script will work.
+
+## 🎮Getting Started
+
+1. Run the project
+```
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the Stripe CLI (In case, if you choose the second option)
+```
+yarn stripe
+```
+3. Now, open your browser and navigate to: http://localhost:3000
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## 🌐Technologies
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- [TypeScript](https://www.typescriptlang.org/)
+- [Next.js](https://nextjs.org/)
+- [NextAuth.js](https://next-auth.js.org/getting-started/example)
+- [Stripe](https://stripe.com/br)
+- [Prismic CMS](https://prismic.io/)
+- [Fauna ](https://fauna.com/)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 📝License
 
-## Stripe-cli
+Released in 2021.
 
-Para testar os webhooks do Stripe:
-    Baixe o executavel da cli do Stripe no site da ferramenta
-    Na pasta raiz do programa, crie uma pasta e coloque o executavel dentro da mesma
-    Execute o comando `stripe`
+This project is under the MIT license
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Made with love by [Yuri Oliveira](https://github.com/Yuri-stack) 🚀.
