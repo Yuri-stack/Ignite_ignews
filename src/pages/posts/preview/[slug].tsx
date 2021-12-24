@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next"
+import { GetStaticPaths, GetStaticProps } from "next"
 import { useSession } from "next-auth/react"
 import Head from 'next/head'
 import Link from 'next/link'
@@ -56,10 +56,14 @@ export default function PostPreview({ post }: PostPreviewProps){
     )
 }
 
-export const getStaticPaths = () => {
+// Essa função só existe em páginas dinamicas [algumacoisa].tsx
+export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        paths: [],
-        fallback: 'blocking'
+        // Define quais previews(nesse caso) devem ser carregados durante a Build
+        paths: [],  // No caso, as telas estáticas serão geradas no primeiro acesso
+
+        // Define como a info estatica vai ser carregada
+        fallback: 'blocking'  // Na forma blocking, ele define que os dados são carregados no lado do Next(Servidor)
     }
 }
 
@@ -80,5 +84,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         })
     }
 
-    return { props: { post } }
+    return { 
+        props: { 
+            post 
+        }, 
+        revalidate: 60 * 30 // 30 minutos
+    }
 }
